@@ -1,3 +1,4 @@
-1. WHQL 改藍字
-2. 把sigcheck.exe , signtool.exe 放在folder
-3. log依資料夾名稱命名.
+1. WHQL 改藍字 - done
+2. 把sigcheck.exe , signtool.exe 放在folder - done
+3. log依資料夾名稱命名. - done
+4. 記錄上次資料夾

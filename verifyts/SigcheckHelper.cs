@@ -11,7 +11,7 @@ namespace verifyts
 {
     class SigcheckHelper
     {
-        private const string logFileName = "temp.log";
+        //private const string logFileName = "temp.log";
 
         private StringBuilder outputlog;
         private ProcessStartInfo startInfo;
@@ -20,7 +20,7 @@ namespace verifyts
             outputlog = new StringBuilder();
             startInfo = new ProcessStartInfo
             {
-                FileName = "sigcheck.exe",
+                FileName = "exe\\sigcheck.exe",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,

@@ -27,7 +27,7 @@ namespace verifyts
             outputlog = new StringBuilder();
             startInfo = new ProcessStartInfo
             {
-                FileName = "signtool.exe",
+                FileName = "exe\\signtool.exe",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,

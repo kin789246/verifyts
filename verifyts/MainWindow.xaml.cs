@@ -23,7 +23,7 @@ namespace verifyts
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string logFileName = "catresult.log";
+        private string logFileName;
         private List<CatData> catDatas;
         public MainWindow()
         {
@@ -61,7 +61,9 @@ namespace verifyts
                 }
                 else
                 {
+                    logFileName = System.IO.Path.GetFileName(folderDialog.SelectedPath) + DateTime.Now.ToString("_yyyyMMdd_hhmmss") + ".log";
                     DeleteLogFile();
+
                     catDatas = new List<CatData>();
                     await ParseCatCategory(catFiles);
                     GetOutputText();
@@ -90,7 +92,9 @@ namespace verifyts
             }
             if (isWhql)
             {
-                ResultTB.Inlines.Add(AddString("This is WHQL driver."));
+                ResultTB.Inlines.Add(AddString("This is "));
+                ResultTB.Inlines.Add(AddString("WHQL ", Colors.Blue, Colors.White));
+                ResultTB.Inlines.Add(AddString("driver."));
                 ResultTB.Inlines.Add(AddString(" Logs is saved to " + logFileName));
                 WriteLog("This is WHQL driver.");
             }
@@ -238,7 +242,7 @@ namespace verifyts
 
             return run;
         }
-        private static void WriteLog(string text)
+        private void WriteLog(string text)
         {
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter(logFileName, true))

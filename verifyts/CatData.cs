@@ -25,11 +25,11 @@ namespace verifyts
 
         public override string ToString()
         {
-            return "=====================\n" +
-                CatName + "\n" +
-                catCategory + "\n" +
-                osSupport + "\n" +
-                "=====================\n\n";
+            return "=====================" + Environment.NewLine +
+                CatName + Environment.NewLine +
+                catCategory + Environment.NewLine +
+                osSupport + Environment.NewLine +
+                "=====================" + Environment.NewLine + Environment.NewLine;
         }
     }
 }
