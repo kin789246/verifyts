@@ -1,0 +1,40 @@
+﻿<Window x:Class="verifyts.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:verifyts"
+        mc:Ignorable="d"
+        Title="VerifyTS" Height="450" Width="800" Left="50" Top="10">
+
+    <Grid x:Name="WholeGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="50"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Select Driver Folder" Margin="5" Padding="2" Name="SelDrvFolderBtn" Click="SelDrvFolderBtn_Click" />
+
+            <Button Content="DEBUG" Margin="5" Padding="2" Name="DebugBtn" Click="DebugBtn_Click" Visibility="Collapsed" />
+        </StackPanel>
+        <Label Grid.Column="1" Content="ver 0.1" Name="VerLabel" HorizontalAlignment="Right" VerticalContentAlignment="Center"/>
+
+        <Grid Grid.Row="5" Grid.ColumnSpan="2" Margin="0,5,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <!--<Label Content="OUTPUT" FontSize="11" Padding="1" Margin="5,0"/>-->
+            <Border Grid.Row="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1" Margin="5,0,5,5">
+                <ScrollViewer Name="OutputSV" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <TextBlock Name="OutputTB" TextWrapping="Wrap" />
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+    </Grid>
+</Window>
