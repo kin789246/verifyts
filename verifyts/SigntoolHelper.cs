@@ -70,10 +70,10 @@ namespace verifyts
 
         private void ExecuteProc(Process process)
         {
-            process.Start();
             process.OutputDataReceived += Process_OutputDataReceived;
             process.ErrorDataReceived += Process_ErrorDataReceived;
 
+            process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
@@ -84,7 +84,11 @@ namespace verifyts
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                outputlog.Append(e.Data).AppendLine();
+                lock(outputlog)
+                {
+                    outputlog.Append(e.Data).AppendLine();
+                }
+                //Debug.WriteLine("err:" + e.Data);
             }
         }
 
@@ -92,7 +96,11 @@ namespace verifyts
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                outputlog.Append(e.Data).AppendLine();
+                lock (outputlog)
+                {
+                    outputlog.Append(e.Data).AppendLine();
+                }
+                //Debug.WriteLine("std:" + e.Data);
             }
         }
     }

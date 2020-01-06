@@ -24,9 +24,11 @@ namespace verifyts
     public partial class MainWindow : Window
     {
         private const string logFileName = "catresult.log";
+        private List<CatData> catDatas;
         public MainWindow()
         {
             InitializeComponent();
+            ResultTB.Text = "";
         }
 
         private async void SelDrvFolderBtn_Click(object sender, RoutedEventArgs e)
@@ -45,6 +47,7 @@ namespace verifyts
                 //load cat list
                 WholeGrid.IsEnabled = false;
 
+                ResultTB.Inlines.Clear();
                 OutputTB.Inlines.Clear();
                 OutputTB.Inlines.Add(AddString("Analyzing cat files in " + folderDialog.SelectedPath + "\n"));
                 OutputSV.ScrollToEnd();
@@ -59,11 +62,62 @@ namespace verifyts
                 else
                 {
                     DeleteLogFile();
+                    catDatas = new List<CatData>();
                     await ParseCatCategory(catFiles);
+                    GetOutputText();
+                    GetResult();
+                    //Process.Start(logFileName);
                 }
-                
+
                 WholeGrid.IsEnabled = true;
             }
+        }
+
+        private void GetResult()
+        {
+            if (catDatas == null)
+            {
+                return;
+            }
+            bool isWhql = true;
+            foreach (var item in catDatas)
+            {
+                if (item.CatCategory != "WHQL Signed")
+                {
+                    isWhql = false;
+                    break;
+                }
+            }
+            if (isWhql)
+            {
+                ResultTB.Inlines.Add(AddString("This is WHQL driver."));
+                ResultTB.Inlines.Add(AddString(" Logs is saved to " + logFileName));
+                WriteLog("This is WHQL driver.");
+            }
+            else
+            {
+                ResultTB.Inlines.Add(AddString("This is "));
+                ResultTB.Inlines.Add(AddString("NOT WHQL ", Colors.Red, Colors.White));
+                ResultTB.Inlines.Add(AddString("driver."));
+                ResultTB.Inlines.Add(AddString(" Logs is saved to " + logFileName));
+                WriteLog("This is NOT WHQL driver.");
+            }
+        }
+
+        private void GetOutputText()
+        {
+            if (catDatas == null)
+            {
+                return;
+            }
+
+            foreach (var item in catDatas)
+            {
+                OutputTB.Inlines.Add(AddString(item.ToString()));
+                WriteLog(item.ToString());
+            }
+
+            OutputSV.ScrollToEnd();
         }
 
         private void DeleteLogFile()
@@ -95,50 +149,51 @@ namespace verifyts
             string log = "";
             SigntoolHelper signtool = new SigntoolHelper();
             SigcheckHelper sigcheck = new SigcheckHelper();
-            //CatCategory category = CatCategory.Expired;
             
             foreach (var name in catFiles)
             {
+                CatData tempCatData = new CatData();
+                tempCatData.CatName = name;
+
                 log = await signtool.VerifyAttested(name);
-                OutputTB.Inlines.Add(AddString(name + " | "));
+                //OutputTB.Inlines.Add(AddString(name + " | "));
                 if (log.Contains(successVerified))
                 {
+                    tempCatData.CatCategory = "Attested Signed";
                     //category = CatCategory.AttestedSigned;
-                    OutputTB.Inlines.Add(AddString("Attested Signed | "));
                 }
                 else if (log.Contains(expiredStr))
                 {
+                    tempCatData.CatCategory = "Sign Expired";
                     //category = CatCategory.Expired;
-                    OutputTB.Inlines.Add(AddString("Sign Expired | "));
                 }
                 else if (log.Contains(notTrust))
                 {
-                    OutputTB.Inlines.Add(AddString("Not Trust Sign | "));
+                    tempCatData.CatCategory = "Not Trusted Sign";
                 }
                 else if (log.Contains(notPossesEKU))
                 {
                     log = await signtool.VerifyLifetime(name);
                     if (log.Contains(successVerified))
                     {
+                        tempCatData.CatCategory = "Legacy Test Signed";
                         //category = CatCategory.LegacyTestSigned;
-                        OutputTB.Inlines.Add(AddString("Legacy Test Signed | "));
                     }
                     else
                     {
+                        tempCatData.CatCategory = "WHQL Signed";
                         //category = CatCategory.WHQL;
-                        OutputTB.Inlines.Add(AddString("WHQL Signed | "));
                     }
                 }
                 else
                 {
-                    OutputTB.Inlines.Add(AddString("WHQL Signed | "));
+                    tempCatData.CatCategory = "WHQL Signed";
                 }
 
-                string osVersion = await sigcheck.DumpCatContent(name);
-                OutputTB.Inlines.Add(AddString( osVersion.Trim() + "\n"));
+                tempCatData.OsSupport = await sigcheck.DumpCatContent(name);
+                tempCatData.OsSupport = tempCatData.OsSupport.Trim();
+                catDatas.Add(tempCatData);
             }
-
-            Process.Start(logFileName);
         }
 
         private async void DebugBtn_Click(object sender, RoutedEventArgs e)
@@ -166,7 +221,7 @@ namespace verifyts
             run.Foreground = new SolidColorBrush(foreColor);
             run.Background = new SolidColorBrush(bgColor);
 
-            WriteLog(text);
+            //WriteLog(text);
 
             return run;
         }
@@ -179,7 +234,7 @@ namespace verifyts
             run.Foreground = new SolidColorBrush(Colors.Black);
             run.Background = new SolidColorBrush(Colors.White);
 
-            WriteLog(text);
+            //WriteLog(text);
 
             return run;
         }
