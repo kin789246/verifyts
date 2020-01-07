@@ -35,8 +35,9 @@ namespace verifyts
         {
             System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
             folderDialog.ShowNewFolderButton = false;
-            folderDialog.RootFolder = Environment.SpecialFolder.Desktop;
+            folderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
             //folderDialog.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
+            folderDialog.SelectedPath = await LoadLastPath();
 
             System.Windows.Forms.DialogResult result = folderDialog.ShowDialog();
 
@@ -46,6 +47,8 @@ namespace verifyts
                 //----< Selected Folder >----
                 //load cat list
                 WholeGrid.IsEnabled = false;
+
+                SaveLastPath(folderDialog.SelectedPath);
 
                 ResultTB.Inlines.Clear();
                 OutputTB.Inlines.Clear();
@@ -95,7 +98,7 @@ namespace verifyts
                 ResultTB.Inlines.Add(AddString("This is "));
                 ResultTB.Inlines.Add(AddString("WHQL ", Colors.Blue, Colors.White));
                 ResultTB.Inlines.Add(AddString("driver."));
-                ResultTB.Inlines.Add(AddString(" Logs is saved to " + logFileName));
+                ResultTB.Inlines.Add(AddString(" Logs are saved to " + logFileName));
                 WriteLog("This is WHQL driver.");
             }
             else
@@ -103,7 +106,7 @@ namespace verifyts
                 ResultTB.Inlines.Add(AddString("This is "));
                 ResultTB.Inlines.Add(AddString("NOT WHQL ", Colors.Red, Colors.White));
                 ResultTB.Inlines.Add(AddString("driver."));
-                ResultTB.Inlines.Add(AddString(" Logs is saved to " + logFileName));
+                ResultTB.Inlines.Add(AddString(" Logs are saved to " + logFileName));
                 WriteLog("This is NOT WHQL driver.");
             }
         }
@@ -117,7 +120,18 @@ namespace verifyts
 
             foreach (var item in catDatas)
             {
-                OutputTB.Inlines.Add(AddString(item.ToString()));
+                //OutputTB.Inlines.Add(AddString(item.ToString()));
+                OutputTB.Inlines.Add(AddString("=====================" + Environment.NewLine + item.CatName + Environment.NewLine));
+                if (item.CatCategory == "WHQL Signed")
+                {
+                    OutputTB.Inlines.Add(AddString(item.CatCategory + Environment.NewLine));
+                }
+                else
+                {
+                    OutputTB.Inlines.Add(AddString(item.CatCategory + Environment.NewLine, Colors.Red, Colors.White));
+                }
+                
+                OutputTB.Inlines.Add(AddString(item.OsSupport + Environment.NewLine + "=====================" + Environment.NewLine + Environment.NewLine));
                 WriteLog(item.ToString());
             }
 
@@ -249,6 +263,33 @@ namespace verifyts
             {
                 file.Write(text);
             }
+        }
+
+        private void SaveLastPath(string text)
+        {
+            string fileName = "verifyts.ini";
+            using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter(fileName, false))
+            {
+                file.Write(text);
+            }
+        }
+
+        private async Task<string> LoadLastPath()
+        {
+            string lastPath = "";
+            string fileName = "verifyts.ini";
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                while (reader.Peek() > -1)
+                {
+                    string s = await reader.ReadLineAsync();
+                    lastPath = s.Trim();
+                    break;
+                }
+            }
+
+            return lastPath;
         }
     }
 }

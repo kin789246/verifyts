@@ -2,3 +2,4 @@
 2. 把sigcheck.exe , signtool.exe 放在folder - done
 3. log依資料夾名稱命名. - done
 4. 記錄上次資料夾
+5. 分別顏色

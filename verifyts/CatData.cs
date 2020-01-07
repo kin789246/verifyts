@@ -27,8 +27,8 @@ namespace verifyts
         {
             return "=====================" + Environment.NewLine +
                 CatName + Environment.NewLine +
-                catCategory + Environment.NewLine +
-                osSupport + Environment.NewLine +
+                CatCategory + Environment.NewLine +
+                OsSupport + Environment.NewLine +
                 "=====================" + Environment.NewLine + Environment.NewLine;
         }
     }

@@ -70,7 +70,6 @@ namespace verifyts
                 if (Regex.IsMatch(e.Data, rgx))
                 {
                     outputlog.Append(e.Data).AppendLine();
-                    return;
                 }
             }
         }
