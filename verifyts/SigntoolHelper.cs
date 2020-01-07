@@ -139,3 +139,11 @@ namespace verifyts
 //        certificate which is not trusted by the trust provider.
 
 //Number of errors: 1
+
+//D:\work\TS>signtool.exe verify /u 1.3.6.1.4.1.311.10.3.5.1 d:\temp\testTs\0kb\kmdfsamples.cat
+//File: d:\temp\testTs\0kb\kmdfsamples.cat
+//Index  Algorithm Timestamp
+//========================================
+//SignTool Error: No signature found.
+
+//Number of errors: 1

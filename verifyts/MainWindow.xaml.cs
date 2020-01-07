@@ -163,6 +163,7 @@ namespace verifyts
             const string notTrust = "certificate which is not trusted by the trust provider";
             const string notPossesEKU = "The signer does not possess the specified EKUs";
             const string successVerified = "Successfully verified";
+            const string noSignatureFound = "No signature found";
 
             string log = "";
             SigntoolHelper signtool = new SigntoolHelper();
@@ -174,8 +175,11 @@ namespace verifyts
                 tempCatData.CatName = name;
 
                 log = await signtool.VerifyAttested(name);
-                //OutputTB.Inlines.Add(AddString(name + " | "));
-                if (log.Contains(successVerified))
+                if (log.Contains(noSignatureFound))
+                {
+                    tempCatData.CatCategory = "No Signature Found";
+                }
+                else if (log.Contains(successVerified))
                 {
                     tempCatData.CatCategory = "Attested Signed";
                     //category = CatCategory.AttestedSigned;

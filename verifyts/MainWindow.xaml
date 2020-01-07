@@ -21,7 +21,7 @@
             <TextBlock x:Name="ResultTB" FontSize="15" VerticalAlignment="Center" Text="Sample" />
             <Button Content="DEBUG" Margin="5" Padding="2" Name="DebugBtn" Click="DebugBtn_Click" Visibility="Collapsed" />
         </StackPanel>
-        <Label Grid.Column="1" Content="ver 0.4.3" Name="VerLabel" HorizontalAlignment="Right" VerticalContentAlignment="Center"/>
+        <Label Grid.Column="1" Content="ver 0.5.0" Name="VerLabel" HorizontalAlignment="Right" VerticalContentAlignment="Center"/>
 
         <Grid Grid.Row="5" Grid.ColumnSpan="2" Margin="0,5,0,0">
             <Grid.RowDefinitions>
